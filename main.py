@@ -10,7 +10,7 @@ import time
 import pyautogui
 import openai
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 def obter_resposta(texto):
     response = openai.Completion.create(
@@ -72,6 +72,14 @@ def comando_voz_usuario():
             pesquisa_url = f'{termo_pesquisa}'
             pywhatkit.search(pesquisa_url)
             falar(f'pesquisando{termo_pesquisa} no google.')
+        elif 'abrir' and 'abra' in comando:
+            abra = comando.replace('abrir', '')
+            pyautogui.press('win')
+            time.sleep(1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           )
+            pyautogui.write(abra)
+            time.sleep(1)
+            pyautogui.press('enter')
+            falar(f'abrindo o {abra}')
         else:
             resposta = obter_resposta(comando)
             falar(resposta)
