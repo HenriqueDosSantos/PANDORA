@@ -51,7 +51,13 @@ def falar(texto):
 def comando_voz_usuario():
     comando = execute_comando()
     if comando is not None:
-        if 'horas' in comando:
+        if 'bom dia' in comando:
+            falar('Bom dia, em que posso ajudar?')
+        elif 'boa tarde' in comando:
+            falar('Bboa tarde, em que posso ajudar?')
+        elif 'boa noite' in comando:
+            falar('Boa noite, em que posso ajudar?')
+        elif 'horas' in comando:
             hora = datetime.datetime.now().strftime('%H:%M')
             falar('Agora são ' + hora)
         elif 'data' in comando:
