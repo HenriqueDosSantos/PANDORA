@@ -54,9 +54,9 @@ def comando_voz_usuario():
         if 'bom dia' in comando:
             falar('Bom dia, em que posso ajudar?')
         elif 'boa tarde' in comando:
-            falar('Bboa tarde, em que posso ajudar?')
+            falar('Boa tarde, em que posso ajudar?')
         elif 'boa noite' in comando:
-            falar('Boa noite, em que posso ajudar?')
+            falar('Boa noite, Durma bem')
         elif 'horas' in comando:
             hora = datetime.datetime.now().strftime('%H:%M')
             falar('Agora são ' + hora)
