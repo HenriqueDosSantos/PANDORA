@@ -9,8 +9,14 @@ import re
 import time
 import pyautogui
 import openai
+import newspaper
+from GoogleNews import GoogleNews
 
+googlenews = GoogleNews()
 openai.api_key = "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"
+
+def ler_ultimas_noticias():
+    googlenews = GoogleNews(lang='pt')
 
 def obter_resposta(texto):
     response = openai.Completion.create(
@@ -42,11 +48,14 @@ def execute_comando():
     return None
 
 def falar(texto):
-    tts = gTTS(text=texto, lang='pt-br')
-    arquivo_temporario = 'temp.mp3'
-    tts.save(arquivo_temporario)
-    playsound.playsound(arquivo_temporario)
-    os.remove(arquivo_temporario)
+    if texto and texto.strip():  
+        tts = gTTS(text=texto, lang='pt-br')
+        arquivo_temporario = 'temp.mp3'
+        tts.save(arquivo_temporario)
+        playsound.playsound(arquivo_temporario)
+        os.remove(arquivo_temporario)
+    else:
+        print('Nenhum texto para falar.')
 
 def comando_voz_usuario():
     comando = execute_comando()
