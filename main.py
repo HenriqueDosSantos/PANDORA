@@ -12,11 +12,10 @@ import openai
 import newspaper
 from GoogleNews import GoogleNews
 
-googlenews = GoogleNews()
+googlenews = GoogleNews(lang='pt', period='2d')
 openai.api_key = "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"
-
-def ler_ultimas_noticias():
-    googlenews = GoogleNews(lang='pt')
+ultimas_noticias_faladas = []
+limite_noticias = 5
 
 def obter_resposta(texto):
     response = openai.Completion.create(
@@ -77,6 +76,21 @@ def comando_voz_usuario():
             wikipedia.set_lang('pt')
             resultado = wikipedia.summary(procurar, 2)
             falar(resultado)
+        elif 'notícias' in comando:
+            jornal = comando.replace('notícias', '')
+            googlenews.search(jornal)
+            noticias = googlenews.result()
+            contador_noticias = 0
+            for noticia in noticias:
+                if contador_noticias >= limite_noticias:
+                    break
+                titulo = noticia['title']
+                if titulo not in ultimas_noticias_faladas:
+                    falar(titulo)
+                    ultimas_noticias_faladas.append(titulo)
+                    contador_noticias += 0
+                else:
+                    continue
         elif 'toque' in comando:
             musica = comando.replace('toque', '')
             resultado = pywhatkit.playonyt(musica)
