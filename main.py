@@ -9,13 +9,19 @@ import re
 import time
 import pyautogui
 import openai
-import newspaper
+import serial
 from GoogleNews import GoogleNews
 
+arduino_port = 'COM5'  
+arduino_baudrate = 9600
+arduino = serial.Serial(arduino_port, arduino_baudrate)
 googlenews = GoogleNews(lang='pt', period='2d')
 openai.api_key = "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"
 ultimas_noticias_faladas = []
 limite_noticias = 5
+
+def enviar_comando_arduino(comando):
+    arduino.write(comando.encode())
 
 def obter_resposta(texto):
     response = openai.Completion.create(
@@ -60,47 +66,47 @@ def comando_voz_usuario():
     comando = execute_comando()
     if comando is not None:
         if 'bom dia' in comando:
-            falar('Bom dia, em que posso ajudar?')
+                    falar('Bom dia, em que posso ajudar?')
         elif 'boa tarde' in comando:
-            falar('Boa tarde, em que posso ajudar?')
+                    falar('Boa tarde, em que posso ajudar?')
         elif 'boa noite' in comando:
-            falar('Boa noite, Durma bem')
+                    falar('Boa noite, Durma bem')
         elif 'horas' in comando:
-            hora = datetime.datetime.now().strftime('%H:%M')
-            falar('Agora são ' + hora)
+                    hora = datetime.datetime.now().strftime('%H:%M')
+                    falar('Agora são ' + hora)
         elif 'data' in comando:
-            data = datetime.date.today().strftime('%d/%m/%Y')
-            falar('Hoje é ' + data)
+                    data = datetime.date.today().strftime('%d/%m/%Y')
+                    falar('Hoje é ' + data)
         elif 'procure por' in comando:
-            procurar = comando.replace('procure por', '')
-            wikipedia.set_lang('pt')
-            resultado = wikipedia.summary(procurar, 2)
-            falar(resultado)
+                    procurar = comando.replace('procure por', '')
+                    wikipedia.set_lang('pt')
+                    resultado = wikipedia.summary(procurar, 2)
+                    falar(resultado)
         elif 'notícias' in comando:
-            jornal = comando.replace('notícias', '')
-            googlenews.search(jornal)
-            noticias = googlenews.result()
-            contador_noticias = 0
-            for noticia in noticias:
-                if contador_noticias >= limite_noticias:
-                    break
-                titulo = noticia['title']
-                if titulo not in ultimas_noticias_faladas:
-                    falar(titulo)
-                    ultimas_noticias_faladas.append(titulo)
-                    contador_noticias += 0
-                else:
-                    continue
+                    jornal = comando.replace('notícias', '')
+                    googlenews.search(jornal)
+                    noticias = googlenews.result()
+                    contador_noticias = 0
+                    for noticia in noticias:
+                        if contador_noticias >= limite_noticias:
+                            break
+                        titulo = noticia['title']
+                        if titulo not in ultimas_noticias_faladas:
+                            falar(titulo)
+                            ultimas_noticias_faladas.append(titulo)
+                            contador_noticias += 0
+                        else:
+                            continue
         elif 'toque' in comando:
-            musica = comando.replace('toque', '')
-            resultado = pywhatkit.playonyt(musica)
-            resultado_sem_link = ' '.join([palavra for palavra in resultado.split() if 'youtube.com' not in palavra])
-            falar('tocando música ' + resultado_sem_link)
+                    musica = comando.replace('toque', '')
+                    resultado = pywhatkit.playonyt(musica)
+                    resultado_sem_link = ' '.join([palavra for palavra in resultado.split() if 'youtube.com' not in palavra])
+                    falar('tocando música ' + resultado_sem_link)
         elif 'pesquise' in comando:
-            termo_pesquisa = comando.replace('pesquise', '')
-            pesquisa_url = f'{termo_pesquisa}'
-            pywhatkit.search(pesquisa_url)
-            falar(f'pesquisando{termo_pesquisa} no google.')
+                    termo_pesquisa = comando.replace('pesquise', '')
+                    pesquisa_url = f'{termo_pesquisa}'
+                    pywhatkit.search(pesquisa_url)
+                    falar(f'pesquisando{termo_pesquisa} no google.')
         elif 'abrir' and 'abra' in comando:
             abra = comando.replace('abrir', '')
             pyautogui.press('win')
@@ -108,7 +114,13 @@ def comando_voz_usuario():
             pyautogui.write(abra)
             time.sleep(1)
             pyautogui.press('enter')
-            falar(f'abrindo o {abra}')
+            falar(f'abrindo o {abra}')     
+        elif 'ligar led' in comando:
+            enviar_comando_arduino('LIGAR_LED\n')
+            falar('LED ligado.')
+        elif 'desligar led' in comando:
+            enviar_comando_arduino('DESLIGAR_LED\n')
+            falar('LED desligado.')
         else:
             resposta = obter_resposta(comando)
             falar(resposta)
