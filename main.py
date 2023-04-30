@@ -118,7 +118,7 @@ def comando_voz_usuario():
         elif 'ligar led' in comando:
             enviar_comando_arduino('LIGAR_LED\n')
             falar('LED ligado.')
-        elif 'desligar led' in comando:
+        elif 'led' in comando:
             enviar_comando_arduino('DESLIGAR_LED\n')
             falar('LED desligado.')
         else:
