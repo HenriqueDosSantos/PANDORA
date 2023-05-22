@@ -2,12 +2,13 @@ import os
 import speech_recognition as sr
 import datetime
 import wikipedia
-from gtts import gTTS
+from gtts import gTTS 
 import playsound
 import pywhatkit
+import pyautogui
+import pysimplegui as sg
 import re
 import time
-import pyautogui
 import openai
 from GoogleNews import GoogleNews
 
@@ -15,6 +16,19 @@ googlenews = GoogleNews(lang='pt', period='2d')
 openai.api_key = "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"
 ultimas_noticias_faladas = []
 limite_noticias = 5
+
+sg.theme('DarkAmber')  
+
+layout = [  [sg.Text('Pandora ON')] ]
+
+window = sg.Window('Window Title', layout)
+while True:
+    event, values = window.read()
+    if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+        break
+    print('You entered ', values[0])
+
+window.close()
 
 def obter_resposta(texto):
     response = openai.Completion.create(
