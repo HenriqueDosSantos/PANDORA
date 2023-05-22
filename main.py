@@ -9,19 +9,12 @@ import re
 import time
 import pyautogui
 import openai
-import serial
 from GoogleNews import GoogleNews
 
-arduino_port = 'COM5'  
-arduino_baudrate = 9600
-arduino = serial.Serial(arduino_port, arduino_baudrate)
 googlenews = GoogleNews(lang='pt', period='2d')
 openai.api_key = "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"
 ultimas_noticias_faladas = []
 limite_noticias = 5
-
-def enviar_comando_arduino(comando):
-    arduino.write(comando.encode())
 
 def obter_resposta(texto):
     response = openai.Completion.create(
@@ -110,17 +103,11 @@ def comando_voz_usuario():
         elif 'abrir' and 'abra' in comando:
             abra = comando.replace('abrir', '')
             pyautogui.press('win')
-            time.sleep(1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           )
+            time.sleep(1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         )
             pyautogui.write(abra)
             time.sleep(1)
             pyautogui.press('enter')
-            falar(f'abrindo o {abra}')     
-        elif 'ligar led' in comando:
-            enviar_comando_arduino('LIGAR_LED\n')
-            falar('LED ligado.')
-        elif 'led' in comando:
-            enviar_comando_arduino('DESLIGAR_LED\n')
-            falar('LED desligado.')
+            falar(f'abrindo o {abra}')
         else:
             resposta = obter_resposta(comando)
             falar(resposta)
